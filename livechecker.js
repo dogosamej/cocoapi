@@ -4,10 +4,11 @@ const puppeteer = require('puppeteer');
 async function checkLiveStatus(username) {
   try {
     const browser = await puppeteer.launch({
-  headless: 'new'
-  executablePath: '/usr/bin/chromium-browser', // <- Ruta del Chrome en zenika/alpine-chrome
+  headless: 'new',
+  executablePath: '/usr/bin/chromium-browser', // Usa el Chrome del contenedor
   args: ['--no-sandbox', '--disable-setuid-sandbox']
 });
+
 
 
     const page = await browser.newPage();
