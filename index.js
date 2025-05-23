@@ -8,6 +8,11 @@ const PORT = process.env.PORT || 10000;
 
 app.use(cors());
 
+// Ruta raíz para confirmar que la API está funcionando
+app.get('/', (req, res) => {
+  res.send('¡API de cocoapi funcionando correctamente!');
+});
+
 // Ruta para verificar un solo usuario
 app.get('/api/live/:username', async (req, res) => {
   const { username } = req.params;
