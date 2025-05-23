@@ -1,23 +1,22 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
-const { isUserLive } = require('./livechecker');
+const { checkLiveStatus } = require('./livechecker');
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
 app.use(cors());
 
-// Ruta raíz para confirmar que la API está funcionando
-app.get('/', (req, res) => {
-  res.send('¡API de cocoapi funcionando correctamente!');
-});
-
 // Ruta para verificar un solo usuario
 app.get('/api/live/:username', async (req, res) => {
   const { username } = req.params;
-  const result = await isUserLive(username);
-  res.json(result);
+  try {
+    const isLive = await checkLiveStatus(username);
+    res.json({ username, isLive });
+  } catch (error) {
+    res.status(500).json({ error: `Error al verificar a ${username}` });
+  }
 });
 
 // Ruta para verificar todos los usuarios del JSON
@@ -31,9 +30,14 @@ app.get('/api/live', async (req, res) => {
   }
 
   const results = [];
+
   for (const user of userList) {
-    const result = await isUserLive(user);
-    if (result.isLive) results.push(result.username);
+    try {
+      const isLive = await checkLiveStatus(user);
+      if (isLive) results.push(user);
+    } catch (error) {
+      console.error(`❌ Error al verificar a ${user}: ${error.message}`);
+    }
   }
 
   res.json({ liveUsers: results });

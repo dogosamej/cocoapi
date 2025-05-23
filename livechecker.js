@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 
-async function checkLiveStatus(username) {
+async function isUserLive(username) {
   try {
     const browser = await puppeteer.launch({
       headless: true,
@@ -13,17 +13,15 @@ async function checkLiveStatus(username) {
       timeout: 30000
     });
 
-    // Esperar por si hay redirecciones o banners
     await page.waitForTimeout(2000);
-
     const isLive = await page.$('.css-101726n-SpanLiveBadge.e1vl87hj3');
-
     await browser.close();
-    return Boolean(isLive);
+
+    return { username, isLive: Boolean(isLive) };
   } catch (error) {
     console.error(`⚠️ Error al verificar a ${username}:`, error.message);
-    return false;
+    return { username, isLive: false };
   }
 }
 
-module.exports = { checkLiveStatus };
+module.exports = { isUserLive };
