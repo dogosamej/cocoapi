@@ -1,15 +1,12 @@
-// livechecker.js
 const puppeteer = require('puppeteer');
 
-async function checkLiveStatus(username) {
+async function isUserLive(username) {
   try {
     const browser = await puppeteer.launch({
-  headless: 'new',
-  executablePath: '/usr/bin/chromium-browser', // Usa el Chrome del contenedor
-  args: ['--no-sandbox', '--disable-setuid-sandbox']
-});
-
-
+      headless: 'new',
+      executablePath: '/usr/bin/chromium-browser', // usa el Chrome del contenedor
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
 
     const page = await browser.newPage();
     await page.goto(`https://www.tiktok.com/@${username}`, {
@@ -19,13 +16,14 @@ async function checkLiveStatus(username) {
 
     await page.waitForTimeout(2000);
     const isLive = await page.$('.css-101726n-SpanLiveBadge.e1vl87hj3');
-    await browser.close();
 
-    return Boolean(isLive);
+    await browser.close();
+    return { username, isLive: Boolean(isLive) };
   } catch (error) {
     console.error(`⚠️ Error al verificar a ${username}:`, error.message);
-    return false;
+    return { username, isLive: false };
   }
 }
 
-module.exports = { checkLiveStatus };
+module.exports = { isUserLive };
+
