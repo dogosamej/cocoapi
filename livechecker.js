@@ -18,12 +18,13 @@ async function isUserLive(username) {
     const isLive = await page.$('.css-101726n-SpanLiveBadge.e1vl87hj3');
 
     await browser.close();
-    return { username, isLive: Boolean(isLive) };
+    return Boolean(isLive);
   } catch (error) {
     console.error(`⚠️ Error al verificar a ${username}:`, error.message);
-    return { username, isLive: false };
+    return false;
   }
 }
 
 module.exports = { isUserLive };
+
 

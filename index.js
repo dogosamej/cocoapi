@@ -1,26 +1,25 @@
-// index.js
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
-const { checkLiveStatus } = require('./livechecker'); // ✅ correcto
+const { isUserLive } = require('./livechecker');
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
 app.use(cors());
 
-// Verifica un solo usuario
+// Ruta para verificar un solo usuario
 app.get('/api/live/:username', async (req, res) => {
   const { username } = req.params;
   try {
-    const isLive = await checkLiveStatus(username);
+    const isLive = await isUserLive(username);
     res.json({ username, isLive });
   } catch (error) {
     res.status(500).json({ error: `Error al verificar a ${username}` });
   }
 });
 
-// Verifica todos los usuarios del JSON
+// Ruta para verificar todos los usuarios del JSON
 app.get('/api/live', async (req, res) => {
   let userList = [];
   try {
@@ -34,7 +33,7 @@ app.get('/api/live', async (req, res) => {
 
   for (const user of userList) {
     try {
-      const isLive = await checkLiveStatus(user);
+      const isLive = await isUserLive(user);
       if (isLive) results.push(user);
     } catch (error) {
       console.error(`❌ Error al verificar a ${user}: ${error.message}`);
