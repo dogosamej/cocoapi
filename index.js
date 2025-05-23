@@ -1,14 +1,15 @@
+// index.js
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
-const { checkLiveStatus } = require('./livechecker');
+const { checkLiveStatus } = require('./livechecker'); // ✅ correcto
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
 app.use(cors());
 
-// Ruta para verificar un solo usuario
+// Verifica un solo usuario
 app.get('/api/live/:username', async (req, res) => {
   const { username } = req.params;
   try {
@@ -19,7 +20,7 @@ app.get('/api/live/:username', async (req, res) => {
   }
 });
 
-// Ruta para verificar todos los usuarios del JSON
+// Verifica todos los usuarios del JSON
 app.get('/api/live', async (req, res) => {
   let userList = [];
   try {
