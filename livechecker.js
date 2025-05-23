@@ -4,9 +4,11 @@ const puppeteer = require('puppeteer');
 async function checkLiveStatus(username) {
   try {
     const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
+  headless: 'new'
+  executablePath: '/usr/bin/chromium-browser', // <- Ruta del Chrome en zenika/alpine-chrome
+  args: ['--no-sandbox', '--disable-setuid-sandbox']
+});
+
 
     const page = await browser.newPage();
     await page.goto(`https://www.tiktok.com/@${username}`, {
